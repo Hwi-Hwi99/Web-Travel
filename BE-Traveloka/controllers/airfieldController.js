@@ -1,115 +1,106 @@
-const Airfield = require('../models/airfieldModel');
+const airfieldRepository = require('../repositories/airfieldRepository');
 
 const searchAirfield = async (req, res) => {
   try {
+    console.log('🔍 Controller: searchAirfield called with query:', req.query);
     const { keyword } = req.query;
+    const airfields = await airfieldRepository.findAirfields(keyword);
 
-    const airfields = await Airfield.find({
-      $or: [
-        { codeAirfield: { $regex: keyword, $options: 'i' } },
-        { nameAirfield: { $regex: keyword, $options: 'i' } },
-        { city: { $regex: keyword, $options: 'i' } },
-        { country: { $regex: keyword, $options: 'i' } },
-      ],
-    });
-
-    if (airfields.length === 0) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'No airfields found matching your search',
-      });
+    if (!airfields.length) {
+      return res
+        .status(404)
+        .json({ status: 'fail', message: 'No airfields found' });
     }
 
     res.status(200).json({
       status: 'success',
       results: airfields.length,
-      data: {
-        airfields,
-      },
+      data: { airfields, },
     });
   } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Airfield not found',
-    });
+    console.error('❌ Error in searchAirfield:', err.message);
+    res.status(400).json({ status: 'fail', message: err.message });
   }
 };
 
 const getAllAirfields = async (req, res) => {
   try {
-    const airfields = await Airfield.find(req.query);
+    console.log('🔍 Controller: getAllAirfields called with query:', req.query);
+    const airfields = await airfieldRepository.getAllAirfields(req.query);
     res.status(200).json({
       status: 'success',
       results: airfields.length,
-      data: {
-        airfields,
-      },
+      data: { airfields, },
     });
   } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Airfield not found',
-    });
+    console.error('❌ Error in getAllAirfields:', err.message);
+    res.status(400).json({ status: 'fail', message: err.message });
   }
 };
 
 const createAirfield = async (req, res) => {
   try {
-    const newAirfield = await Airfield.create(req.body);
+    console.log('🔍 Controller: createAirfield called with body:', req.body);
+    const newAirfield = await airfieldRepository.createAirfield(req.body);
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        airfield: newAirfield,
-      },
-    });
+    res
+      .status(201)
+      .json({ status: 'success', data: { airfield: newAirfield } });
   } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message,
-    });
+    console.error('❌ Error in createAirfield:', err.message);
+    res.status(400).json({ status: 'fail', message: err.message });
   }
 };
 
 const updateAirfield = async (req, res) => {
   try {
-    const airfield = await Airfield.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    console.log(
+      `🔍 Controller: updateAirfield called with id: ${req.params.id}, body:`,
+      req.body,
+    );
+    const airfield = await airfieldRepository.updateAirfield(
+      req.params.id,
+      req.body,
+    );
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        airfield,
-      },
-    });
+    if (!airfield) {
+      return res
+        .status(404)
+        .json({ status: 'fail', message: 'Airfield not found' });
+    }
+
+    res.status(200).json({ status: 'success', data: { airfield } });
+
   } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message,
-    });
+    console.error('❌ Error in updateAirfield:', err.message);
+    res.status(400).json({ status: 'fail', message: err.message });
   }
 };
 
 const deleteAirfield = async (req, res) => {
   try {
-    await Airfield.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
+    console.log(
+      `🔍 Controller: deleteAirfield called with id: ${req.params.id}`,
+    );
+    const deleted = await airfieldRepository.deleteAirfield(req.params.id);
+
+    if (!deleted) {
+      return res
+        .status(404)
+        .json({ status: 'fail', message: 'Airfield not found' });
+    }
+
+    res.status(204).json({ status: 'success', data: null });
   } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message,
-    });
+    console.error('❌ Error in deleteAirfield:', err.message);
+    res.status(400).json({ status: 'fail', message: err.message });
   }
 };
 
 module.exports = {
-  createAirfield,
   searchAirfield,
+  getAllAirfields,
+  createAirfield,
   updateAirfield,
   deleteAirfield,
   getAllAirfields,
