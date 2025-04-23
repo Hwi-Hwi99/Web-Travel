@@ -51,7 +51,12 @@ function Header() {
                         </>
                     ) : (
                         <>
-                            <Button outline to="/login" leftIcon={<img src={images.user} alt="User" />}>
+                            <Button
+                                 className={cx('loginBtn')}
+                                 outline
+                                 to="/login"
+                                 leftIcon={<img src={images.user} alt="User" />}
+                             >
                                 Đăng Nhập
                             </Button>
 

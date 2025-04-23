@@ -321,8 +321,9 @@ function Home() {
                                             <p className={cx('name-input')}>Từ</p>
                                             <FontAwesomeIcon className={cx('icon')} icon={faPlaneDeparture} />
                                             <input
+                                                className={cx('from-input')}
                                                 type="text"
-                                                placeholder="Origin"
+                                                placeholder="Điểm khởi hành"
                                                 value={from}
                                                 onChange={handleFromInputChange}
                                                 onFocus={() => setIsSelecting(true)}
@@ -354,8 +355,9 @@ function Home() {
                                             )}
                                         >
                                             <input
+                                                className={cx('to-input')}
                                                 type="text"
-                                                placeholder="Destination"
+                                                placeholder="Điểm đến"
                                                 value={to}
                                                 onChange={handleToInputChange}
                                                 onFocus={() => setIsSelecting(false)}
@@ -365,7 +367,7 @@ function Home() {
                                 </div>
 
                                 {/* Amount customer */}
-                                <div className="left-info" onBlur={handleBlur}>
+                                <div className={cx('left-info')} onBlur={handleBlur}>
                                     <div
                                         className={cx('amount-cus')}
                                         onFocus={() => setIsPassenger(true)}
@@ -464,9 +466,10 @@ function Home() {
                                 <div className={cx('right-info')}>
                                     {/* Departure */}
                                     <div className={cx('from')}>
-                                        <p className={cx('name-input')}>Ngày đi</p>
+                                    <p className={cx('name-input')}>Ngày khởi hành</p>
                                         <FontAwesomeIcon className={cx('icon')} icon={faCalendarDay} />
                                         <input
+                                            className={cx('date-input')}
                                             type="date"
                                             placeholder="Origin"
                                             value={departureDate}

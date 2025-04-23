@@ -80,7 +80,7 @@ function Login() {
                             />
                         </label>
                     </div>
-                    <Button primary onClick={handleLogin}>
+                    <Button primary className={cx('login-btn')} onClick={handleLogin}>
                         ĐĂNG NHẬP
                     </Button>
                 </div>
