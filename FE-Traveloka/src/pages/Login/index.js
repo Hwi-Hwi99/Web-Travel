@@ -34,16 +34,27 @@ function Login() {
             const data = await response.data;
             if (response.status === 200) {
                 const { role, token, user } = data;
+                const redirectUrl = sessionStorage.getItem('redirectUrl');
+                const pendingBooking = sessionStorage.getItem('pendingBooking');
                 // Lưu token vào localStorage
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
-                // Chuyển hướng người dùng dựa trên vai trò của họ
-                if (role === 'admin') {
-                    navigate('/listfilght');
-                    window.location.reload();
-                } else if (role === 'user') {
-                    navigate('/');
-                    window.location.reload();
+                
+                if (pendingBooking) {
+                    const customerData = JSON.parse(pendingBooking);
+                    // Xóa dữ liệu sau khi sử dụng
+                    sessionStorage.removeItem('pendingBooking');
+                    sessionStorage.removeItem('redirectUrl');
+                    // Quay lại trang thanh toán với dữ liệu đã nhập
+                    navigate(redirectUrl, { state: customerData });
+                } else {
+                    // Chuyển hướng người dùng dựa trên vai trò của họ
+                    if (role === 'admin') {
+                        navigate('/listfilght');
+                        window.location.reload();
+                    } else if (role === 'user') {
+                        navigate('/');
+                    }
                 }
             } else {
                 handleErrorToast(data.message || 'Đăng nhập thất bại.');

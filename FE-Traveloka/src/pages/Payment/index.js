@@ -12,20 +12,6 @@ const cx = classNames.bind(styles);
 function Payment() {
     const navigate = useNavigate();
     const location = useLocation();
-    const seatClassMapping = (seatClass) => {
-        if (seatClass === 'phoThong') {
-            return 'Phổ thông';
-        } else if (seatClass === 'phoThongDacBiet') {
-            return 'Phổ thông đặt biệt';
-        } else if (seatClass === 'thuongGia') {
-            return 'Thương gia';
-        } else {
-            return 'Hạng nhất';
-        }
-    };
-    const seatMapping = location.state.seatClass;
-    const { flight, returnFlight, adultCount, childCount, infantCount, totalCustomer, contactInfo, customerInfo } =
-        location.state;
 
     const formatDate = (isoString) => {
         return format(new Date(isoString), 'dd/MM/yyyy');
@@ -34,21 +20,6 @@ function Payment() {
     const formatTime = (isoString) => {
         return format(new Date(isoString), 'HH:mm');
     };
-
-    const user = localStorage.getItem('user');
-    const users = JSON.parse(user);
-
-    useEffect(() => {
-        if (!user) {
-            alert('Vui lòng đăng nhập');
-            navigate('/login');
-        }
-    }, []);
-
-    const flightPrice = flight.tickets[seatMapping].price;
-    const returnTicketPrice = returnFlight?.tickets[seatMapping]?.price || 0;
-
-    const totalAmount = (flightPrice + returnTicketPrice) * totalCustomer;
 
     const handleSuccessToast = () => {
         toast.success('Thanh toán thành công!', {
@@ -62,8 +33,48 @@ function Payment() {
         toast.error('Thanh toán thất bại. Vui lòng thử lại!');
     };
 
+    const seatClassMapping = (seatClass) => {
+        const mapping = {
+            phoThong: 'Phổ thông',
+            phoThongDacBiet: 'Phổ thông đặc biệt',
+            thuongGia: 'Thương gia',
+            hangNhat: 'Hạng nhất',
+        };
+        return mapping[seatClass];
+    };
+
+    const {
+        flight,
+        returnFlight,
+        adultCount,
+        childCount,
+        infantCount,
+        totalCustomer,
+        contactInfo,
+        customerInfo,
+        seatClass,
+    } = location.state;
+
+    const user = localStorage.getItem('user');
+    const users = JSON.parse(user);
+
+    useEffect(() => {
+        if (!user) {
+            sessionStorage.setItem('pendingBooking', JSON.stringify(location.state));
+            sessionStorage.setItem('redirectUrl', window.location.pathname);
+            toast.error('Vui Lòng đăng nhập!', {
+                onClose: () => {
+                    navigate('/login');
+                },
+            });
+        }
+    }, [user]);
+    const flightPrice = flight.tickets[seatClass].price;
+    const returnTicketPrice = returnFlight?.tickets[seatClass]?.price || 0;
+
+    const totalAmount = (flightPrice + returnTicketPrice) * totalCustomer;
+
     const seatNumbers = customerInfo.map((customer) => customer.seatNumber);
-    console.log(seatNumbers);
 
     return (
         <div className={cx('wrapper')}>
@@ -85,7 +96,7 @@ function Payment() {
                             Thời gian cất cánh: {formatTime(flight.time.departure)} - Thời gian hạ cánh:{' '}
                             {formatTime(flight.time.arrival)}
                         </li>
-                        <li className={cx('price')}>Hạng ghế: {seatClassMapping(seatMapping)}</li>
+                        <li className={cx('price')}>Hạng ghế: {seatClassMapping(seatClass)}</li>
                         <li className={cx('price')}>Giá vé: {flightPrice.toLocaleString()} VND</li>
                         <li className={cx('amount-cus')}>
                             Số lượng người:
@@ -112,11 +123,10 @@ function Payment() {
                             onApprove={async (data, actions) => {
                                 try {
                                     const res = await actions.order.capture();
-                                    console.log('nay la responese', res);
                                     if (res.status === 'COMPLETED') {
                                         const createBooking = async (
                                             flight,
-                                            seatMapping,
+                                            seatClass,
                                             totalCustomer,
                                             seatNumbers,
                                             ticketPrice,
@@ -127,19 +137,19 @@ function Payment() {
                                                 status: 'checked-in',
                                                 infoContact: contactInfo,
                                                 infoCustomers: customerInfo,
-                                                seatClass: seatMapping,
+                                                seatClass: seatClass,
                                                 totalPrice: ticketPrice * totalCustomer,
                                             };
 
                                             const newFlight = {
                                                 tickets: {
                                                     ...flight.tickets,
-                                                    [seatMapping]: {
-                                                        price: flight.tickets[seatMapping].price,
-                                                        soLuongVe: flight.tickets[seatMapping].soLuongVe,
-                                                        soVeCon: flight.tickets[seatMapping].soVeCon - totalCustomer,
+                                                    [seatClass]: {
+                                                        price: flight.tickets[seatClass].price,
+                                                        soLuongVe: flight.tickets[seatClass].soLuongVe,
+                                                        soVeCon: flight.tickets[seatClass].soVeCon - totalCustomer,
                                                         bookedSeats: [
-                                                            ...flight.tickets[seatMapping].bookedSeats,
+                                                            ...flight.tickets[seatClass].bookedSeats,
                                                             ...seatNumbers,
                                                         ],
                                                     },
@@ -153,11 +163,11 @@ function Payment() {
                                                 ),
                                             ]);
                                         };
-                                        createBooking(flight, seatMapping, totalCustomer, seatNumbers, flightPrice);
+                                        createBooking(flight, seatClass, totalCustomer, seatNumbers, flightPrice);
                                         if (returnFlight) {
                                             createBooking(
                                                 returnFlight,
-                                                seatMapping,
+                                                seatClass,
                                                 totalCustomer,
                                                 seatNumbers,
                                                 returnTicketPrice,
@@ -165,9 +175,7 @@ function Payment() {
                                         }
                                         handleSuccessToast();
                                     }
-                                    console.log(res);
                                 } catch (err) {
-                                    console.log('error', err);
                                     handleErrorToast();
                                 }
                             }}
