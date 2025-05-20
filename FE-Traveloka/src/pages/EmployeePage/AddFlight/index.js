@@ -14,6 +14,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TextField from '@mui/material/TextField';
 const cx = classNames.bind(styles);
 function AddFlight() {
     const navigate = useNavigate();
@@ -187,9 +188,11 @@ function AddFlight() {
                     <div className={cx('flight-info')}>
                         <label>
                             <span>Mã chuyến bay</span>
-                            <input
-                                type="text"
+                            <TextField
+                                label="Mã chuyến bay"
                                 placeholder="Flight Number"
+                                variant="outlined"
+                                // fullWidth
                                 value={flightCode}
                                 onChange={(e) => setFlightCode(e.target.value)}
                             />
@@ -219,9 +222,10 @@ function AddFlight() {
                                         </div>
                                     )}
                                 >
-                                    <input
-                                        type="text"
+                                    <TextField
+                                        label="Hãng hàng không"
                                         placeholder="Airlines"
+                                        variant="outlined"
                                         value={airlines}
                                         onFocus={() => setShowAirline(true)}
                                         onChange={(e) => handleInputChange(e, 'airlines')}
@@ -254,9 +258,10 @@ function AddFlight() {
                                         </div>
                                     )}
                                 >
-                                    <input
-                                        type="text"
+                                    <TextField
+                                        label="Thành phố đi"
                                         placeholder="Departure City"
+                                        variant="outlined"
                                         value={from}
                                         onFocus={() => setShowAirfiled(true)}
                                         onChange={(e) => handleInputChange(e, 'departure')}
@@ -267,11 +272,15 @@ function AddFlight() {
 
                         <label>
                             <span> Thời gian cất cánh</span>
-                            <input
+                            <TextField
+                                label="Giờ khởi hành"
                                 type="time"
-                                placeholder="Departure Time"
+                                variant="outlined"
                                 value={departure}
                                 onChange={(e) => setDeparture(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
                         </label>
                         <div>
@@ -279,72 +288,44 @@ function AddFlight() {
                                 <span> Số lượng vé</span>
                                 <div className={cx('level-ticket')}>
                                     <div className={cx('field')}>
-                                        <label
-                                            className={cx('field-label', {
-                                                'show-field-label': ticketPhoThong.trim() !== '',
-                                            })}
-                                            htmlFor="economy-tickets"
-                                        >
-                                            Phổ thông
-                                        </label>
-                                        <input
+                                        <TextField
                                             id="economy-tickets"
-                                            type="text"
+                                            label="Phổ thông"
                                             placeholder="Phổ thông"
+                                            variant="outlined"
                                             className={cx('field-input')}
                                             value={ticketPhoThong}
                                             onChange={(e) => setTicketPhoThong(e.target.value)}
                                         />
                                     </div>
                                     <div className={cx('field')}>
-                                        <label
-                                            className={cx('field-label', {
-                                                'show-field-label': ticketPhoThongDacBiet.trim() !== '',
-                                            })}
-                                            htmlFor="premium-economy-tickets"
-                                        >
-                                            Phổ thông đặc biệt
-                                        </label>
-                                        <input
+                                        <TextField
                                             id="premium-economy-tickets"
-                                            type="text"
+                                            label="Phổ thông đặc biệt"
                                             placeholder="Phổ thông đặc biệt"
+                                            variant="outlined"
                                             className={cx('field-input')}
                                             value={ticketPhoThongDacBiet}
                                             onChange={(e) => setTicketVePhoThongDacBiet(e.target.value)}
                                         />
                                     </div>
                                     <div className={cx('field')}>
-                                        <label
-                                            className={cx('field-label', {
-                                                'show-field-label': ticketThuongGia.trim() !== '',
-                                            })}
-                                            htmlFor="business-tickets"
-                                        >
-                                            Thương gia
-                                        </label>
-                                        <input
+                                        <TextField
                                             id="business-tickets"
-                                            type="text"
+                                            label="Thương gia"
                                             placeholder="Thương gia"
+                                            variant="outlined"
                                             className={cx('field-input')}
                                             value={ticketThuongGia}
                                             onChange={(e) => setTicketThuongGia(e.target.value)}
                                         />
                                     </div>
                                     <div className={cx('field')}>
-                                        <label
-                                            className={cx('field-label', {
-                                                'show-field-label': ticketHangNhat.trim() !== '',
-                                            })}
-                                            htmlFor="first-class-tickets"
-                                        >
-                                            Hạng nhất
-                                        </label>
-                                        <input
+                                        <TextField
                                             id="first-class-tickets"
-                                            type="text"
+                                            label="Hạng nhất"
                                             placeholder="Hạng nhất"
+                                            variant="outlined"
                                             className={cx('field-input')}
                                             value={ticketHangNhat}
                                             onChange={(e) => setTicketHangNhat(e.target.value)}
@@ -357,11 +338,15 @@ function AddFlight() {
                     <div className={cx('flight-info')}>
                         <label>
                             <span>Ngày khởi hành</span>
-                            <input
+                            <TextField
+                                label="Ngày khởi hành"
                                 type="date"
-                                placeholder="Departure Date"
+                                variant="outlined"
                                 value={departureDate}
                                 onChange={(e) => setDepartureDate(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
                         </label>
                         <div>
@@ -389,9 +374,10 @@ function AddFlight() {
                                         </div>
                                     )}
                                 >
-                                    <input
-                                        type="text"
+                                    <TextField
+                                        label="Thành phố đến"
                                         placeholder="Arrival City"
+                                        variant="outlined"
                                         value={to}
                                         onFocus={() => setShowAirfiled(true)}
                                         onChange={(e) => handleInputChange(e, 'arrival')}
@@ -401,84 +387,60 @@ function AddFlight() {
                         </div>
                         <label>
                             <span>Thời gian hạ cánh</span>
-                            <input
+                            <TextField
+                                label="Giờ đến"
                                 type="time"
-                                placeholder="Arrival Time"
+                                variant="outlined"
                                 value={arrival}
                                 onChange={(e) => setArrival(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
                         </label>
                         <label className={cx('price-ticket')}>
                             <span> Giá vé</span>
                             <div className={cx('level-ticket')}>
                                 <div className={cx('field')}>
-                                    <label
-                                        className={cx('field-label', {
-                                            'show-field-label': pricePhoThong.trim() !== '',
-                                        })}
-                                        htmlFor="economy-price"
-                                    >
-                                        Phổ thông
-                                    </label>
-                                    <input
+                                    <TextField
                                         id="economy-price"
-                                        className={cx('field-input')}
-                                        type="text"
+                                        label="Phổ thông"
                                         placeholder="Phổ thông"
+                                        variant="outlined"
+                                        className={cx('field-input')}
                                         value={pricePhoThong}
                                         onChange={(e) => setPricePhoThong(e.target.value)}
                                     />
                                 </div>
                                 <div className={cx('field')}>
-                                    <label
-                                        className={cx('field-label', {
-                                            'show-field-label': pricePhoThongDacBiet.trim() !== '',
-                                        })}
-                                        htmlFor="premium-economy-price"
-                                    >
-                                        Phổ thông
-                                    </label>
-                                    <input
+                                    <TextField
                                         id="premium-economy-price"
-                                        type="text"
-                                        className={cx('field-input')}
+                                        label="Phổ thông đặc biệt"
                                         placeholder="Phổ thông đặc biệt"
+                                        variant="outlined"
+                                        className={cx('field-input')}
                                         value={pricePhoThongDacBiet}
                                         onChange={(e) => setPricePhoThongDacBiet(e.target.value)}
                                     />
                                 </div>
                                 <div className={cx('field')}>
-                                    <label
-                                        className={cx('field-label', {
-                                            'show-field-label': priceThuongGia.trim() !== '',
-                                        })}
-                                        htmlFor="business-price"
-                                    >
-                                        Phổ thông
-                                    </label>
-                                    <input
-                                        className={cx('field-input')}
+                                    <TextField
                                         id="business-price"
-                                        type="text"
+                                        label="Thương gia"
                                         placeholder="Thương gia"
+                                        variant="outlined"
+                                        className={cx('field-input')}
                                         value={priceThuongGia}
                                         onChange={(e) => setPriceThuongGia(e.target.value)}
                                     />
                                 </div>
                                 <div className={cx('field')}>
-                                    <label
-                                        className={cx('field-label', {
-                                            'show-field-label': priceHangNhat.trim() !== '',
-                                        })}
-                                        htmlFor="first-class-price"
-                                    >
-                                        Phổ thông
-                                    </label>
-                                    <input
-                                        className={cx('field-input')}
+                                    <TextField
                                         id="first-class-price"
-                                        type="text"
+                                        label="Hạng nhất"
                                         placeholder="Hạng nhất"
+                                        variant="outlined"
+                                        className={cx('field-input')}
                                         value={priceHangNhat}
                                         onChange={(e) => setPriceHangNhat(e.target.value)}
                                     />

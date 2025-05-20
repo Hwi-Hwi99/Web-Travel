@@ -10,6 +10,7 @@ const airfieldSchema = new mongoose.Schema({
   nameAirfield: {
     type: String,
     required: true,
+    unique: true,
   },
   city: {
     type: String,

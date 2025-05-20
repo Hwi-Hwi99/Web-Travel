@@ -54,10 +54,16 @@ function AddAirfield() {
         }
     };
 
+    const handleGetAirfield = async () => {
+        try {
+            await axios.get('http://localhost:4000/api/airfield');
+        } catch (err) {}
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('content')}>
-                <h1>ĐIỀN THÔNG TIN SÂN BAY</h1>
+                <h1>THÔNG TIN SÂN BAY</h1>
                 <div className={cx('add-airfield')}>
                     <div className={cx('airfield-info')}>
                         <div>
@@ -65,7 +71,7 @@ function AddAirfield() {
                                 <span>Sân bay</span>
                                 <input
                                     type="text"
-                                    placeholder="Nhập tên sân bay"
+                                    placeholder="Tên sân bay"
                                     value={airfieldName}
                                     onChange={(e) => setAirfieldName(e.target.value)}
                                 />
@@ -74,7 +80,7 @@ function AddAirfield() {
                                 <span>Mã sân bay</span>
                                 <input
                                     type="text"
-                                    placeholder="Nhập mã sân bay"
+                                    placeholder="Mã sân bay"
                                     value={airfieldCode}
                                     onChange={(e) => setAirfieldCode(e.target.value)}
                                 />
@@ -85,7 +91,7 @@ function AddAirfield() {
                                 <span>Thành phố</span>
                                 <input
                                     type="text"
-                                    placeholder="Nhập tên thành phố"
+                                    placeholder="Tên thành phố"
                                     value={city}
                                     onChange={(e) => setCity(e.target.value)}
                                 />
@@ -94,12 +100,13 @@ function AddAirfield() {
                                 <span>Quốc gia</span>
                                 <input
                                     type="text"
-                                    placeholder="Nhập quốc gia của hãng"
+                                    placeholder="Quốc gia của hãng"
                                     value={country}
                                     onChange={(e) => setCountry(e.target.value)}
                                 />
                             </label>
                         </div>
+                        <div></div>
                     </div>
                     <Button primary className={cx('btn-add-airfield')} onClick={handleAddAirfield}>
                         THÊM

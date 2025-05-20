@@ -9,7 +9,7 @@
     .btn-nav-bar{
         margin-left: 0 !important;
         margin-bottom: 12px;
-        min-height: 10rem;
+        height: clamp(60px, 10vh, 80px);
     }
     
 }
